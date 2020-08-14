@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c32c697227522445a2e6f98edf998fb, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  m_MinBettingAmount: 100
-  m_PlayerStartingCashAmount: 0
+  m_MinBettingAmount: 10
+  m_PlayerStartingCashAmount: 1000
