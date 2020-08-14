@@ -48,4 +48,12 @@ public class Seat : MonoBehaviour {
 		m_CardObjects.Add(cardObject);
 	}
 
+	public int GetTotalScore() {
+		int sum = 0;
+		foreach (var card in m_CardsInHand) {
+			sum += BlackjackRules.GetScore(card.cardType);
+		}
+		return sum;
+	}
+
 }

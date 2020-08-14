@@ -43,6 +43,9 @@ public class Game : MonoBehaviour {
 	private void Update() {
 		if (Input.GetKeyDown(KeyCode.A)) {
 			DealFirstCards();
+			foreach (var seat in m_Seats) {
+				Debug.LogFormat("Score: {0}", seat.GetTotalScore());
+			}
 		}
 	}
 
