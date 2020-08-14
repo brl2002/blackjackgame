@@ -59,6 +59,14 @@ public class CardPool : MonoBehaviour {
 		return card;
 	}
 
+	public Sprite GetCardImage(CardType cardType) {
+		return m_CardSprites[(int)cardType];
+	}
+
+	public Sprite GetBackImage() {
+		return m_CardSprites[m_CardSprites.Length - 1];
+	}
+
 	#endregion
 
 }

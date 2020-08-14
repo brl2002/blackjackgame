@@ -20,10 +20,16 @@ public class Game : MonoBehaviour {
 
 	private CardPool m_CardPool;
 
+	public CardPool CardPool {
+		get {
+			return m_CardPool;
+		}
+	}
+
 	private void Awake() {
 		m_CardPool = Instantiate(m_CardPoolPrefab);
 		m_DealerSeat = AddSeat(Seat.Type.DEALER);
-		m_DealerSeat.DealCard(m_CardPool.GetCard());
+		AddSeat(Seat.Type.PLAYER);
 	}
 
 	private Seat AddSeat(Seat.Type type) {
@@ -36,7 +42,15 @@ public class Game : MonoBehaviour {
 
 	private void Update() {
 		if (Input.GetKeyDown(KeyCode.A)) {
-			m_DealerSeat.DealCard(m_CardPool.GetCard());
+			DealFirstCards();
+		}
+	}
+
+	public void DealFirstCards() {
+		for (int i = 0; i < 2; i++) {
+			foreach (var seat in m_Seats) {
+				seat.DealCard(m_CardPool.GetCard());
+			}
 		}
 	}
 
@@ -47,7 +61,7 @@ public class Game : MonoBehaviour {
 	public static Game Instance {
 		get {
 			if (s_Instance == null) {
-				s_Instance = new GameObject().AddComponent<Game>();
+				s_Instance = FindObjectOfType<Game>();
 				s_Instance.name = "Game";
 				DontDestroyOnLoad(s_Instance);
 			}

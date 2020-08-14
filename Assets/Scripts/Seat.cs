@@ -34,11 +34,16 @@ public class Seat : MonoBehaviour {
 		m_CardsInHand.Add(card);
 
 		CardObject cardObject = Instantiate(m_CardObjectPrefab);
-		if (m_CardsInHand.Count == 0) {
+		cardObject.SetImage(Game.Instance.CardPool.GetCardImage(card.cardType));
+		if (m_CardObjects.Count == 0) {
 			cardObject.transform.position = m_Position;
 		} else {
 			Vector2 lastCardObjectPos = m_CardObjects[m_CardObjects.Count - 1].transform.position;
 			cardObject.transform.position = new Vector3(lastCardObjectPos.x + 0.8f, lastCardObjectPos.y, 0);
+
+			if (m_CardObjects.Count == 1 && m_Type == Type.DEALER) {
+				cardObject.Flip();
+			}
 		}
 		m_CardObjects.Add(cardObject);
 	}
