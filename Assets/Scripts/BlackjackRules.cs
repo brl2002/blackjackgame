@@ -16,6 +16,18 @@ public class BlackjackRules : MonoBehaviour {
 
 	#endregion
 
+	#region Public Methods
+
+	public static int GetScore(CardType cardType) {
+		int index = (int)cardType;
+		if (index < 48) {
+			return index / 4 + 2;
+		}
+		return 11;
+	}
+
+	#endregion
+
 	#region Singleton
 
 	private static BlackjackRules s_Instance;
