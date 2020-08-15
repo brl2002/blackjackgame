@@ -222,9 +222,9 @@ MonoBehaviour:
     type: 3}
   m_CardPoolPrefab: {fileID: 5927834447369236212, guid: e340d4e05c2ca4c418240fac6eee02d0,
     type: 3}
-  m_Positions:
-  - {fileID: 2084475737}
-  - {fileID: 1522110808}
+  m_SeatPositions:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &170503488
 Transform:
   m_ObjectHideFlags: 0
@@ -1122,6 +1122,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1522110808}
+  - component: {fileID: 1522110809}
   m_Layer: 0
   m_Name: PlayerSeat(1)
   m_TagString: Untagged
@@ -1143,6 +1144,18 @@ Transform:
   m_Father: {fileID: 170503488}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1522110809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522110807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33cdcaa488aae2c4ba97fc445b362a77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1557313110
 GameObject:
   m_ObjectHideFlags: 0
@@ -1452,6 +1465,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2084475737}
+  - component: {fileID: 2084475738}
   m_Layer: 0
   m_Name: DealerSeat
   m_TagString: Untagged
@@ -1473,6 +1487,18 @@ Transform:
   m_Father: {fileID: 170503488}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2084475738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084475736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33cdcaa488aae2c4ba97fc445b362a77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2090971617
 GameObject:
   m_ObjectHideFlags: 0

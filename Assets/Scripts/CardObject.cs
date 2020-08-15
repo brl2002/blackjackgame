@@ -7,15 +7,25 @@ public class CardObject : MonoBehaviour {
 		BACK
 	}
 
+	#region Fields
+
 	private SpriteRenderer m_SpriteRenderer;
 
 	private Sprite m_CardImage;
 
 	private State m_State = State.FRONT;
 
+	#endregion
+
+	#region Private Methods
+
 	private void Awake() {
 		m_SpriteRenderer = GetComponent<SpriteRenderer>();
 	}
+
+	#endregion
+
+	#region Public Methods
 
 	public void SetImage(Sprite sprite) {
 		m_CardImage = sprite;
@@ -39,5 +49,7 @@ public class CardObject : MonoBehaviour {
 			ShowCard();
 		}
 	}
+
+	#endregion
 
 }
