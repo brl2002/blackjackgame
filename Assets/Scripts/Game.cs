@@ -111,12 +111,25 @@ public class Game : MonoBehaviour {
 	/// </summary>
 	/// <returns>1 if given seat beats other seat, 0 if given seat loses to other seat, -1 if given seat busts</returns>
 	private int GetOutcome(Seat seat, Seat otherSeat) {
-		int seatHighestTotalScore = seat.GetHighestTotalScore();
-		int otherSeatHighestTotalScore = otherSeat.GetHighestTotalScore();
-		if (seatHighestTotalScore > -1) {
-			return seatHighestTotalScore > otherSeatHighestTotalScore ? 1 : -1;
+		int seatHighestTotalScore = 0;
+		bool seatBusts = GetHighestTotalScoreAndCheckBust(seat, out seatHighestTotalScore);
+		int otherSeatHighestTotalScore = 0;
+		bool otherSeatBusts = GetHighestTotalScoreAndCheckBust(otherSeat, out otherSeatHighestTotalScore);
+		if (seatBusts) {
+			return seatHighestTotalScore > otherSeatHighestTotalScore ? 1 : 0;
 		}
 		return -1;
+	}
+
+	/// <summary>
+	/// Get highest total score for a seat and check for bust
+	/// </summary>
+	/// <param name="seat"></param>
+	/// <param name="seatHighestTotalScore"></param>
+	/// <returns>true for bust</returns>
+	private bool GetHighestTotalScoreAndCheckBust(Seat seat, out int seatHighestTotalScore) {
+		seatHighestTotalScore = 0;
+		return seat.GetHighestTotalScore(out seatHighestTotalScore);
 	}
 
 	#endregion
@@ -141,31 +154,42 @@ public class Game : MonoBehaviour {
 			}
 		}
 		foreach (var seat in m_TakenSeats) {
-			Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seat.GetHighestTotalScore());
+			int seatHighestScore = 0;
+			seat.GetHighestTotalScore(out seatHighestScore);
+			Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seatHighestScore);
 		}
 	}
 
 	public void DealCard(Seat seat) {
 		seat.DealCard(m_CardPool.GetCard());
-		Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seat.GetHighestTotalScore());
+		int seatHighestScore = 0;
+		seat.GetHighestTotalScore(out seatHighestScore);
+		Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seatHighestScore);
 	}
 
 	public void Hit(Seat seat) {
 		DealCard(seat);
-		int outcome = GetOutcome(seat, m_DealerSeat);
-		if (outcome == -1) {
-			Debug.LogFormat("Seat {0} {1} busts", seat.GetSeatType(), seat.name);
+		int seatHighestTotalScore = 0;
+		if (GetHighestTotalScoreAndCheckBust(seat, out seatHighestTotalScore)) {
+			Debug.LogFormat("Seat {0} {1} busts with score {2}", seat.GetSeatType(), seat.name, seatHighestTotalScore);
 		}
 	}
 
 	public void Stand(Seat seat) {
 		// now dealer's turn so deal cards until 17 or higher to stand or busts
+		// this logic would not work with a table with multiple players
+		int dealerHighestScore = 0;
+		m_DealerSeat.GetHighestTotalScore(out dealerHighestScore);
+		while (dealerHighestScore < 17) {
+			m_DealerSeat.DealCard(m_CardPool.GetCard());
+		}
+		
 	}
 
 	public void DoubleDown(Seat seat) {
 		DealCard(seat);
-		int outcome = GetOutcome(seat, m_DealerSeat);
-		if (outcome == -1) {
+		int seatHighestTotalScore = 0;
+		if (GetHighestTotalScoreAndCheckBust(seat, out seatHighestTotalScore)) {
 			Debug.LogFormat("Seat {0} {1} busts", seat.GetSeatType(), seat.name);
 		}
 	}

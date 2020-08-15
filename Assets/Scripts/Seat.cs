@@ -78,17 +78,25 @@ public class Seat : MonoBehaviour {
 
 	private List<int> m_TotalScores = new List<int>();
 
-	public int GetHighestTotalScore() {
-		// Default value set to -1 as bust
-		int highestScore = -1;
+	public bool GetHighestTotalScore(out int highestScore) {
+		highestScore = 0;
 		m_TotalScores.Clear();
+
+		int bustScore = 0; // true highest score saved to keep possible bust score
 		GetAllTotalScoresRecursivelyImpl(0, 0);
 		foreach (var score in m_TotalScores) {
 			if (score < 22 && score > highestScore) {
 				highestScore = score;
 			}
+			if (score > bustScore) {
+				bustScore = score;
+			}
 		}
-		return highestScore;
+		bool isBust = highestScore == 0 || highestScore > 21;
+		if (isBust) {
+			highestScore = bustScore;
+		}
+		return isBust;
 	}
 
 	private void GetAllTotalScoresRecursivelyImpl(int index, int totalScore) {
