@@ -4,10 +4,15 @@ using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
 
-	#region Serialized Fields
+	public enum State {
+		WAITING,
+		DEALING_STARTING_CARDS,
+		WAITING_FOR_PLAYER,
+		DEALING_PLAYER_CARD,
+		ROUND_COMPLETE
+	}
 
-	[SerializeField]
-	private Seat m_SeatPrefab;
+	#region Serialized Fields
 
 	[SerializeField]
 	private CardPool m_CardPoolPrefab;
@@ -15,6 +20,8 @@ public class Game : MonoBehaviour {
 	#endregion
 
 	#region Fields
+
+	private State m_State;
 
 	private Seat[] m_Seats;
 
@@ -43,16 +50,25 @@ public class Game : MonoBehaviour {
 	private void Awake() {
 		m_Seats = GetComponentsInChildren<Seat>();
 		m_CardPool = Instantiate(m_CardPoolPrefab);
-		m_DealerSeat = AddSeat(Seat.Type.DEALER);
-		AddSeat(Seat.Type.PLAYER);
+		m_State = State.WAITING;
 	}
 
 	private void Update() {
 		if (Input.GetKeyDown(KeyCode.A)) {
-			DealFirstCards();
+			if (m_State == State.WAITING) {
+				m_DealerSeat = AddSeat(Seat.Type.DEALER);
+				AddSeat(Seat.Type.PLAYER);
+				m_State = State.DEALING_STARTING_CARDS;
+				DealFirstCards();
+				m_State = State.WAITING_FOR_PLAYER;
+			}
 		}
 		if (Input.GetKeyDown(KeyCode.H)) {
-			Hit(m_TakenSeats[1]);
+			if (m_State == State.WAITING_FOR_PLAYER) {
+				m_State = State.DEALING_PLAYER_CARD;
+				Hit(m_TakenSeats[1]);
+				m_State = State.WAITING_FOR_PLAYER;
+			}
 		}
 		if (Input.GetKeyDown(KeyCode.S)) {
 			Stand(m_TakenSeats[1]);
@@ -90,6 +106,19 @@ public class Game : MonoBehaviour {
 		return -1;
 	}
 
+	/// <summary>
+	/// For a given seat, determine outcome of holding set of cards
+	/// </summary>
+	/// <returns>1 if given seat beats other seat, 0 if given seat loses to other seat, -1 if given seat busts</returns>
+	private int GetOutcome(Seat seat, Seat otherSeat) {
+		int seatHighestTotalScore = seat.GetHighestTotalScore();
+		int otherSeatHighestTotalScore = otherSeat.GetHighestTotalScore();
+		if (seatHighestTotalScore > -1) {
+			return seatHighestTotalScore > otherSeatHighestTotalScore ? 1 : -1;
+		}
+		return -1;
+	}
+
 	#endregion
 
 	#region public Methods
@@ -116,18 +145,29 @@ public class Game : MonoBehaviour {
 		}
 	}
 
-	public void Hit(Seat seat) {
+	public void DealCard(Seat seat) {
 		seat.DealCard(m_CardPool.GetCard());
 		Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seat.GetHighestTotalScore());
+	}
+
+	public void Hit(Seat seat) {
+		DealCard(seat);
+		int outcome = GetOutcome(seat, m_DealerSeat);
+		if (outcome == -1) {
+			Debug.LogFormat("Seat {0} {1} busts", seat.GetSeatType(), seat.name);
+		}
 	}
 
 	public void Stand(Seat seat) {
-		
+		// now dealer's turn so deal cards until 17 or higher to stand or busts
 	}
 
 	public void DoubleDown(Seat seat) {
-		seat.DealCard(m_CardPool.GetCard());
-		Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seat.GetHighestTotalScore());
+		DealCard(seat);
+		int outcome = GetOutcome(seat, m_DealerSeat);
+		if (outcome == -1) {
+			Debug.LogFormat("Seat {0} {1} busts", seat.GetSeatType(), seat.name);
+		}
 	}
 
 	#endregion
