@@ -34,6 +34,8 @@ public class Game : MonoBehaviour {
 
 	public static Action<Seat> OnDealerBust;
 
+	public static Action<Seat> OnRoundComplete;
+
 	#endregion
 
 	#region Serialized Fields
@@ -211,6 +213,15 @@ public class Game : MonoBehaviour {
 	public void CompleteRound() {
 		ClearTable();
 		m_State = State.ROUND_COMPLETE;
+		if (OnRoundComplete != null) {
+			foreach (var seat in m_TakenSeats) {
+				OnRoundComplete(seat);
+			}
+		}
+		//Debug.LogFormat()
+		m_State = State.DEALING_STARTING_CARDS;
+		DealFirstCards();
+		m_State = State.WAITING_FOR_PLAYER;
 	}
 
 	public void Hit(Seat seat) {
@@ -221,7 +232,8 @@ public class Game : MonoBehaviour {
 			if (OnSeatBust != null) {
 				OnSeatBust(seat, seatHighestTotalScore);
 			}
-			// TO-DO: Decrement player cash by current bet amount
+			// Decrement player cash by current bet amount
+			seat.RemoveCash(seat.BettingAmount);
 			CompleteRound();
 		}
 	}
@@ -244,15 +256,20 @@ public class Game : MonoBehaviour {
 			if (OnDealerBust != null) {
 				OnDealerBust(seat);
 			}
+			// Increment player cash by current bet amount
+			seat.HandOutCash(seat.BettingAmount);
+			Debug.LogFormat("Seat {0} {1} wins with score {2}", seat.GetSeatType(), seat.name, seatHighestScore);
 		} else {
 			if (seatHighestScore > dealerHighestScore) {
-				// TO-DO: Increment player cash by current bet amount
+				// Increment player cash by current bet amount
+				seat.HandOutCash(seat.BettingAmount);
 				if (OnSeatWin != null) {
 					OnSeatWin(seat, seatHighestScore, dealerHighestScore);
 				}
 				Debug.LogFormat("Seat {0} {1} wins with score {2}", seat.GetSeatType(), seat.name, seatHighestScore);
 			} else {
-				// TO-DO: Decrement player cash by current bet amount
+				// Decrement player cash by current bet amount
+				seat.RemoveCash(seat.BettingAmount);
 				if (OnSeatLose != null) {
 					OnSeatLose(seat, seatHighestScore, dealerHighestScore);
 				}
@@ -263,9 +280,11 @@ public class Game : MonoBehaviour {
 	}
 
 	public void DoubleDown(Seat seat) {
-		// TO-DO: Double bet amount
+		// Double bet amount
+		seat.DoubleBettingAmount();
+		// First implement a rule where doubling down will mean that it will be the last card that player gets
 		Hit(seat);
-		// TO-DO: First implement a rule where doubling down will mean that it will be the last card that player gets
+		Stand(seat);
 	}
 
 	#endregion

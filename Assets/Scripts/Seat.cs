@@ -106,6 +106,9 @@ public class Seat : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Clears all card objects and cards in hand and resets betting amount
+	/// </summary>
 	public void Clear() {
 		for (int i = 0; i < m_CardObjects.Count; i++) {
 			Destroy(m_CardObjects[i].gameObject);
@@ -123,6 +126,15 @@ public class Seat : MonoBehaviour {
 		}
 		m_BetAmount = BlackjackRules.Instance.MinBettingAmount;
 		Debug.LogFormat("Betting Amount Has Been Reset To: {0}", m_BetAmount);
+	}
+
+	public void DoubleBettingAmount() {
+		int doubledBettingAmount = m_BetAmount * 2;
+		if (OnBetAmountChanged != null) {
+			OnBetAmountChanged(doubledBettingAmount, m_BetAmount);
+		}
+		m_BetAmount = doubledBettingAmount;
+		Debug.LogFormat("Betting Amount Has Been Doubled To: {0}", m_BetAmount);
 	}
 
 	public void HandOutCash(int amount) {
