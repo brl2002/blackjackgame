@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class Seat : MonoBehaviour {
 
@@ -7,6 +8,20 @@ public class Seat : MonoBehaviour {
 		PLAYER,
 		DEALER
 	}
+
+	#region Events
+
+	/// <summary>
+	/// int newAmount, int previousAmount
+	/// </summary>
+	public Action<int, int> OnBetAmountChanged;
+
+	/// <summary>
+	/// int newCashInHand, int previousCashInHand
+	/// </summary>
+	public Action<int, int> OnCashInHandChanged;
+
+	#endregion
 
 	#region Fields
 
@@ -18,12 +33,33 @@ public class Seat : MonoBehaviour {
 
 	private List<CardObject> m_CardObjects = new List<CardObject>();
 
+	private int m_CashAtHand = 0;
+
+	private int m_BetAmount = 0;
+
 	#endregion
 
 	#region Monobehaviour Methods
 
 	private void Awake() {
 		m_CardObjectPrefab = Resources.Load<GameObject>("CardObject").GetComponent<CardObject>();
+		Clear();
+	}
+
+	#endregion
+
+	#region Properties
+
+	public int BettingAmount {
+		get {
+			return m_BetAmount;
+		}
+	}
+
+	public int CashAtHand {
+		get {
+			return m_CashAtHand;
+		}
 	}
 
 	#endregion
@@ -68,6 +104,43 @@ public class Seat : MonoBehaviour {
 				m_CardObjects[i].HideCard();
 			}
 		}
+	}
+
+	public void Clear() {
+		for (int i = 0; i < m_CardObjects.Count; i++) {
+			Destroy(m_CardObjects[i].gameObject);
+			m_CardObjects[i] = null;
+		}
+		m_CardObjects.Clear();
+		m_CardsInHand.Clear();
+		ResetBettingAmount();
+	}
+
+	public void ResetBettingAmount() {
+		int minBettingAmount = BlackjackRules.Instance.MinBettingAmount;
+		if (OnBetAmountChanged != null) {
+			OnBetAmountChanged(minBettingAmount, m_BetAmount);
+		}
+		m_BetAmount = BlackjackRules.Instance.MinBettingAmount;
+		Debug.LogFormat("Betting Amount Has Been Reset To: {0}", m_BetAmount);
+	}
+
+	public void HandOutCash(int amount) {
+		int newCashAtHand = m_CashAtHand + amount;
+		if (OnCashInHandChanged != null) {
+			OnCashInHandChanged(newCashAtHand, m_CashAtHand);
+		}
+		m_CashAtHand = newCashAtHand;
+		Debug.LogFormat("Cash Has Been Adjusted To: {0}", m_CashAtHand);
+	}
+
+	public void RemoveCash(int amount) {
+		int newCashAtHand = m_CashAtHand - amount;
+		if (OnCashInHandChanged != null) {
+			OnCashInHandChanged(newCashAtHand, m_CashAtHand);
+		}
+		m_CashAtHand = newCashAtHand;
+		Debug.LogFormat("Cash Has Been Adjusted To: {0}", m_CashAtHand);
 	}
 
 	#endregion

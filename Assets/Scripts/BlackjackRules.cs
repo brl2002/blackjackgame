@@ -16,13 +16,23 @@ public class BlackjackRules : MonoBehaviour {
 
 	#endregion
 
-	#region Public Methods
+	#region Properties
 
-	[UnityEditor.MenuItem("Minsoo/Test")]
-	static void Test() {
-		Debug.LogFormat("Score: {0}", GetScore(CardType.CLOVER_6));
-		Debug.LogFormat("Score: {0}", GetScore(CardType.CLOVER_q));
+	public int MinBettingAmount {
+		get {
+			return m_GameSettings.MinBettingAmount;
+		}
 	}
+
+	public int PlayerStartingCashAmount {
+		get {
+			return m_GameSettings.PlayerStartingCashAmount;
+		}
+	}
+
+	#endregion
+
+	#region Public Methods
 
 	public static int GetScore(CardType cardType) {
 		int index = (int)cardType;
