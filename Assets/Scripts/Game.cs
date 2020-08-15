@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
 
+	#region Serialized Fields
+
 	[SerializeField]
 	private Seat m_SeatPrefab;
 
@@ -12,6 +14,10 @@ public class Game : MonoBehaviour {
 	[SerializeField]
 	private Transform[] m_Positions;
 
+	#endregion
+
+	#region Fields
+
 	private int m_PositionIndex = 0;
 
 	private List<Seat> m_Seats = new List<Seat>();
@@ -20,11 +26,19 @@ public class Game : MonoBehaviour {
 
 	private CardPool m_CardPool;
 
+	#endregion
+
+	#region Properties
+
 	public CardPool CardPool {
 		get {
 			return m_CardPool;
 		}
 	}
+
+	#endregion
+
+	#region Monobeahviour Methods
 
 	private void Awake() {
 		m_CardPool = Instantiate(m_CardPoolPrefab);
@@ -32,21 +46,31 @@ public class Game : MonoBehaviour {
 		AddSeat(Seat.Type.PLAYER);
 	}
 
-	private Seat AddSeat(Seat.Type type) {
+	private void Update() {
+		if (Input.GetKeyDown(KeyCode.A)) {
+			DealFirstCards();
+		}
+		if (Input.GetKeyDown(KeyCode.H)) {
+			Hit(m_Seats[1]);
+		}
+		if (Input.GetKeyDown(KeyCode.S)) {
+			Stand(m_Seats[1]);
+		}
+		if (Input.GetKeyDown(KeyCode.D)) {
+			DoubleDown(m_Seats[1]);
+		}
+	}
+
+	#endregion
+
+	#region public Methods
+
+	public Seat AddSeat(Seat.Type type) {
 		Seat seat = Instantiate(m_SeatPrefab) as Seat;
 		seat.SetPosition(m_Positions[m_PositionIndex++].position);
 		seat.SetType(type);
 		m_Seats.Add(seat);
 		return seat;
-	}
-
-	private void Update() {
-		if (Input.GetKeyDown(KeyCode.A)) {
-			DealFirstCards();
-			foreach (var seat in m_Seats) {
-				Debug.LogFormat("Score: {0}", seat.GetTotalScore());
-			}
-		}
 	}
 
 	public void DealFirstCards() {
@@ -55,7 +79,26 @@ public class Game : MonoBehaviour {
 				seat.DealCard(m_CardPool.GetCard());
 			}
 		}
+		foreach (var seat in m_Seats) {
+			Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seat.GetHighestTotalScore());
+		}
 	}
+
+	public void Hit(Seat seat) {
+		seat.DealCard(m_CardPool.GetCard());
+		Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seat.GetHighestTotalScore());
+	}
+
+	public void Stand(Seat seat) {
+		
+	}
+
+	public void DoubleDown(Seat seat) {
+		seat.DealCard(m_CardPool.GetCard());
+		Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seat.GetHighestTotalScore());
+	}
+
+	#endregion
 
 	#region Singleton
 

@@ -22,13 +22,21 @@ public class CardObject : MonoBehaviour {
 		m_SpriteRenderer.sprite = m_CardImage;
 	}
 
+	public void ShowCard() {
+		m_SpriteRenderer.sprite = m_CardImage;
+		m_State = State.FRONT;
+	}
+
+	public void HideCard() {
+		m_SpriteRenderer.sprite = Game.Instance.CardPool.GetBackImage();
+		m_State = State.BACK;
+	}
+
 	public void Flip() {
 		if (m_State == State.FRONT) {
-			m_SpriteRenderer.sprite = Game.Instance.CardPool.GetBackImage();
-			m_State = State.BACK;
+			HideCard();
 		} else {
-			m_SpriteRenderer.sprite = m_CardImage;
-			m_State = State.FRONT;
+			ShowCard();
 		}
 	}
 

@@ -8,6 +8,8 @@ public class Seat : MonoBehaviour {
 		DEALER
 	}
 
+	#region Fields
+
 	private Type m_Type;
 
 	private Vector2 m_Position;
@@ -18,8 +20,20 @@ public class Seat : MonoBehaviour {
 
 	private List<CardObject> m_CardObjects = new List<CardObject>();
 
+	#endregion
+
+	#region Monobehaviour Methods
+
 	private void Awake() {
 		m_CardObjectPrefab = Resources.Load<GameObject>("CardObject").GetComponent<CardObject>();
+	}
+
+	#endregion
+
+	#region Public Methods
+
+	public Type GetSeatType() {
+		return m_Type;
 	}
 
 	public void SetType(Type type) {
@@ -48,12 +62,48 @@ public class Seat : MonoBehaviour {
 		m_CardObjects.Add(cardObject);
 	}
 
-	public int GetTotalScore() {
-		int sum = 0;
-		foreach (var card in m_CardsInHand) {
-			sum += BlackjackRules.GetScore(card.cardType);
+	public void ShowCards() {
+		foreach (var card in m_CardObjects) {
+			
 		}
-		return sum;
 	}
+
+	#endregion
+
+	#region Highest Score W. Recursive Strategy
+
+	private int m_HighestSum = 0;
+
+	private List<int> m_TotalScores = new List<int>();
+
+	public int GetHighestTotalScore() {
+		// Default value set to -1 as bust
+		int highestScore = -1;
+		m_TotalScores.Clear();
+		GetAllTotalScoresRecursivelyImpl(0, 0);
+		foreach (var score in m_TotalScores) {
+			if (score < 22 && score > highestScore) {
+				highestScore = score;
+			}
+		}
+		return highestScore;
+	}
+
+	private void GetAllTotalScoresRecursivelyImpl(int index, int totalScore) {
+		if (index > m_CardsInHand.Count - 1) {
+			m_TotalScores.Add(totalScore);
+			return;
+		}
+		int score = BlackjackRules.GetScore(m_CardsInHand[index].cardType);
+		int nextIndex = index + 1;
+		if (score == 11) {
+			GetAllTotalScoresRecursivelyImpl(nextIndex, totalScore + 11);
+			GetAllTotalScoresRecursivelyImpl(nextIndex, totalScore + 1);
+		} else {
+			GetAllTotalScoresRecursivelyImpl(nextIndex, totalScore + score);
+		}
+	}
+
+	#endregion
 
 }
