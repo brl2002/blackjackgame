@@ -3,6 +3,15 @@
 Design Doc:
 https://docs.google.com/document/d/1Jrapj4DCRUwRQ8jhN-5sNaVtyrHQgVImMdY1_AJuneY/edit?usp=sharing
 
+## How To Play  
+UI feature is currently not implemented
+Use keyboard to play:
+- 'a' to take seats
+- 'h' to hit
+- 's' to stand
+- 'd' to double down
+  - double down feature not yet complete along with player bet and cash logic
+
 ## Features  
 
 - Single player game
