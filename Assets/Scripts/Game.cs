@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
@@ -11,16 +12,15 @@ public class Game : MonoBehaviour {
 	[SerializeField]
 	private CardPool m_CardPoolPrefab;
 
-	[SerializeField]
-	private Transform[] m_Positions;
-
 	#endregion
 
 	#region Fields
 
-	private int m_PositionIndex = 0;
+	private Seat[] m_Seats;
 
-	private List<Seat> m_Seats = new List<Seat>();
+	private int m_TurnCount = 0;
+
+	private List<Seat> m_TakenSeats = new List<Seat>();
 
 	private Seat m_DealerSeat;
 
@@ -41,6 +41,7 @@ public class Game : MonoBehaviour {
 	#region Monobeahviour Methods
 
 	private void Awake() {
+		m_Seats = GetComponentsInChildren<Seat>();
 		m_CardPool = Instantiate(m_CardPoolPrefab);
 		m_DealerSeat = AddSeat(Seat.Type.DEALER);
 		AddSeat(Seat.Type.PLAYER);
@@ -51,14 +52,42 @@ public class Game : MonoBehaviour {
 			DealFirstCards();
 		}
 		if (Input.GetKeyDown(KeyCode.H)) {
-			Hit(m_Seats[1]);
+			Hit(m_TakenSeats[1]);
 		}
 		if (Input.GetKeyDown(KeyCode.S)) {
-			Stand(m_Seats[1]);
+			Stand(m_TakenSeats[1]);
 		}
 		if (Input.GetKeyDown(KeyCode.D)) {
-			DoubleDown(m_Seats[1]);
+			DoubleDown(m_TakenSeats[1]);
 		}
+		if (Input.GetKeyDown(KeyCode.Q)) {
+			m_DealerSeat.ShowCards();
+		}
+		if (Input.GetKeyDown(KeyCode.W)) {
+			m_DealerSeat.ShowDefault();
+		}
+	}
+
+	#endregion
+
+	#region Helper Methods
+
+	private bool SeatIsTaken(Seat seat) {
+		foreach (var otherSeat in m_TakenSeats) {
+			if (seat == otherSeat) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private int GetNextAvailableSeatTransformIndex() {
+		for (int i = 0; i < m_Seats.Length; i++) {
+			if (!SeatIsTaken(m_Seats[i])) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	#endregion
@@ -66,20 +95,23 @@ public class Game : MonoBehaviour {
 	#region public Methods
 
 	public Seat AddSeat(Seat.Type type) {
-		Seat seat = Instantiate(m_SeatPrefab) as Seat;
-		seat.SetPosition(m_Positions[m_PositionIndex++].position);
-		seat.SetType(type);
-		m_Seats.Add(seat);
-		return seat;
+		int seatIndex = GetNextAvailableSeatTransformIndex();
+		if (seatIndex > -1) {
+			Seat seat = m_Seats[seatIndex];
+			seat.SetType(type);
+			m_TakenSeats.Add(seat);
+			return seat;
+		}
+		return null;
 	}
 
 	public void DealFirstCards() {
 		for (int i = 0; i < 2; i++) {
-			foreach (var seat in m_Seats) {
+			foreach (var seat in m_TakenSeats) {
 				seat.DealCard(m_CardPool.GetCard());
 			}
 		}
-		foreach (var seat in m_Seats) {
+		foreach (var seat in m_TakenSeats) {
 			Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seat.GetHighestTotalScore());
 		}
 	}
@@ -113,6 +145,15 @@ public class Game : MonoBehaviour {
 			}
 			return s_Instance;
 		}
+	}
+
+	#endregion
+
+	#region Editor Functionalities
+
+	[MenuItem("Blackjack/Debug")]
+	static void TurnOnDebug() {
+
 	}
 
 	#endregion

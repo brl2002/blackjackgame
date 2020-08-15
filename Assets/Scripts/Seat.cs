@@ -12,8 +12,6 @@ public class Seat : MonoBehaviour {
 
 	private Type m_Type;
 
-	private Vector2 m_Position;
-
 	private List<Card> m_CardsInHand = new List<Card>();
 
 	private CardObject m_CardObjectPrefab;
@@ -40,17 +38,13 @@ public class Seat : MonoBehaviour {
 		m_Type = type;
 	}
 
-	public void SetPosition(Vector2 pos) {
-		m_Position = pos;
-	}
-
 	public void DealCard(Card card) {
 		m_CardsInHand.Add(card);
 
 		CardObject cardObject = Instantiate(m_CardObjectPrefab);
 		cardObject.SetImage(Game.Instance.CardPool.GetCardImage(card.cardType));
 		if (m_CardObjects.Count == 0) {
-			cardObject.transform.position = m_Position;
+			cardObject.transform.position = transform.position;
 		} else {
 			Vector2 lastCardObjectPos = m_CardObjects[m_CardObjects.Count - 1].transform.position;
 			cardObject.transform.position = new Vector3(lastCardObjectPos.x + 0.8f, lastCardObjectPos.y, 0);
@@ -64,7 +58,15 @@ public class Seat : MonoBehaviour {
 
 	public void ShowCards() {
 		foreach (var card in m_CardObjects) {
-			
+			card.ShowCard();
+		}
+	}
+
+	public void ShowDefault() {
+		for (int i = 0; i < m_CardObjects.Count; i++) {
+			if (i == 1 && m_Type == Type.DEALER) {
+				m_CardObjects[i].HideCard();
+			}
 		}
 	}
 
