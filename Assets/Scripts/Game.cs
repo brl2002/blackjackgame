@@ -218,7 +218,7 @@ public class Game : MonoBehaviour {
 				OnRoundComplete(seat);
 			}
 		}
-		//Debug.LogFormat()
+		Debug.Log("Round Complete");
 		m_State = State.DEALING_STARTING_CARDS;
 		DealFirstCards();
 		m_State = State.WAITING_FOR_PLAYER;
