@@ -18,10 +18,18 @@ public class BlackjackRules : MonoBehaviour {
 
 	#region Public Methods
 
+	[UnityEditor.MenuItem("Minsoo/Test")]
+	static void Test() {
+		Debug.LogFormat("Score: {0}", GetScore(CardType.CLOVER_6));
+		Debug.LogFormat("Score: {0}", GetScore(CardType.CLOVER_q));
+	}
+
 	public static int GetScore(CardType cardType) {
 		int index = (int)cardType;
-		if (index < 48) {
+		if (index < 36) { // in case of numeric values
 			return index / 4 + 2;
+		} else if (index < 48) { // in case of king, jack, queen
+			return 10;
 		}
 		return 11;
 	}
