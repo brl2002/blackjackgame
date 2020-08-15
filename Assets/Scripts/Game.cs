@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System;
 
 public class Game : MonoBehaviour {
 
@@ -9,8 +10,15 @@ public class Game : MonoBehaviour {
 		DEALING_STARTING_CARDS,
 		WAITING_FOR_PLAYER,
 		DEALING_PLAYER_CARD,
+		DEALING_DEALER_CARDS,
 		ROUND_COMPLETE
 	}
+
+	#region Events
+
+	public static Action<Seat> OnSeatRoundComplete;
+
+	#endregion
 
 	#region Serialized Fields
 
@@ -71,10 +79,17 @@ public class Game : MonoBehaviour {
 			}
 		}
 		if (Input.GetKeyDown(KeyCode.S)) {
-			Stand(m_TakenSeats[1]);
+			if (m_State == State.WAITING_FOR_PLAYER) {
+				m_State = State.DEALING_DEALER_CARDS;
+				Stand(m_TakenSeats[1]);
+			}
 		}
 		if (Input.GetKeyDown(KeyCode.D)) {
-			DoubleDown(m_TakenSeats[1]);
+			if (m_State == State.WAITING_FOR_PLAYER) {
+				m_State = State.DEALING_PLAYER_CARD;
+				DoubleDown(m_TakenSeats[1]);
+				m_State = State.WAITING_FOR_PLAYER;
+			}
 		}
 		if (Input.GetKeyDown(KeyCode.Q)) {
 			m_DealerSeat.ShowCards();
