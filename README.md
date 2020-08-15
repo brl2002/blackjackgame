@@ -37,6 +37,8 @@ https://docs.google.com/document/d/1Jrapj4DCRUwRQ8jhN-5sNaVtyrHQgVImMdY1_AJuneY/
 
 ### Game state  
 - Save current game state
+  - List of possible state values/object
+    - Player’s money
 
 ## Code Design
 
@@ -67,3 +69,17 @@ https://docs.google.com/document/d/1Jrapj4DCRUwRQ8jhN-5sNaVtyrHQgVImMdY1_AJuneY/
   - For a given card return the value of the card
 - Get game settings
   - Read game settings from a scriptable object
+
+### Game:  
+- Dealer
+  - Ability to control the flow of the game
+  - Control what happens when player “hit”
+  - Control what happens when player “stand”
+  - Control what happens when player “double down”
+- Control seats; assign, place, and bust/remove
+- Clear seat
+  - Clear card in hand
+  - Clear bet
+- Clear table
+  - Reset pool of cards
+- Determine outcome
