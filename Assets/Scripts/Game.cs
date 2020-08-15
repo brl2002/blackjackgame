@@ -16,7 +16,23 @@ public class Game : MonoBehaviour {
 
 	#region Events
 
-	public static Action<Seat> OnSeatRoundComplete;
+	/// <summary>
+	/// Seat seat, int seatHighestTotalPoints, int dealerHighestTotalPoints
+	/// </summary>
+	public static Action<Seat, int, int> OnSeatWin;
+
+	/// <summary>
+	/// Seat seat, int seatHighestTotalPoints, int dealerHighestTotalPoints
+	/// </summary>
+	public static Action<Seat, int, int> OnSeatLose;
+
+
+	/// <summary>
+	/// Seat seat, int seatHighestTotalPoints
+	/// </summary>
+	public static Action<Seat, int> OnSeatBust;
+
+	public static Action<Seat> OnDealerBust;
 
 	#endregion
 
@@ -65,7 +81,8 @@ public class Game : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.A)) {
 			if (m_State == State.WAITING) {
 				m_DealerSeat = AddSeat(Seat.Type.DEALER);
-				AddSeat(Seat.Type.PLAYER);
+				Seat player = AddSeat(Seat.Type.PLAYER);
+				player.HandOutCash(BlackjackRules.Instance.PlayerStartingCashAmount);
 				m_State = State.DEALING_STARTING_CARDS;
 				DealFirstCards();
 				m_State = State.WAITING_FOR_PLAYER;
@@ -96,6 +113,9 @@ public class Game : MonoBehaviour {
 		}
 		if (Input.GetKeyDown(KeyCode.W)) {
 			m_DealerSeat.ShowDefault();
+		}
+		if (Input.GetKeyDown(KeyCode.C)) {
+			ClearTable();
 		}
 	}
 
@@ -182,11 +202,27 @@ public class Game : MonoBehaviour {
 		Debug.LogFormat("{0} Score: {1}", seat.GetSeatType(), seatHighestScore);
 	}
 
+	public void ClearTable() {
+		foreach (var seat in m_TakenSeats) {
+			seat.Clear();
+		}
+	}
+
+	public void CompleteRound() {
+		ClearTable();
+		m_State = State.ROUND_COMPLETE;
+	}
+
 	public void Hit(Seat seat) {
 		DealCard(seat);
 		int seatHighestTotalScore = 0;
 		if (GetHighestTotalScoreAndCheckBust(seat, out seatHighestTotalScore)) {
 			Debug.LogFormat("Seat {0} {1} busts with score {2}", seat.GetSeatType(), seat.name, seatHighestTotalScore);
+			if (OnSeatBust != null) {
+				OnSeatBust(seat, seatHighestTotalScore);
+			}
+			// TO-DO: Decrement player cash by current bet amount
+			CompleteRound();
 		}
 	}
 
@@ -201,17 +237,35 @@ public class Game : MonoBehaviour {
 		}
 		m_DealerSeat.ShowCards();
 		Debug.LogFormat("{0} Score: {1}", m_DealerSeat.GetSeatType(), dealerHighestScore);
+		int seatHighestScore = 0;
+		seat.GetHighestTotalScore(out seatHighestScore);
 		if (dealerHighestScore > 21) {
 			Debug.LogFormat("Dealer {0} {1} busts with score {2}", m_DealerSeat.GetSeatType(), m_DealerSeat.name, dealerHighestScore);
+			if (OnDealerBust != null) {
+				OnDealerBust(seat);
+			}
+		} else {
+			if (seatHighestScore > dealerHighestScore) {
+				// TO-DO: Increment player cash by current bet amount
+				if (OnSeatWin != null) {
+					OnSeatWin(seat, seatHighestScore, dealerHighestScore);
+				}
+				Debug.LogFormat("Seat {0} {1} wins with score {2}", seat.GetSeatType(), seat.name, seatHighestScore);
+			} else {
+				// TO-DO: Decrement player cash by current bet amount
+				if (OnSeatLose != null) {
+					OnSeatLose(seat, seatHighestScore, dealerHighestScore);
+				}
+				Debug.LogFormat("Seat {0} {1} loses with score {2}", seat.GetSeatType(), seat.name, seatHighestScore);
+			}
 		}
+		CompleteRound();
 	}
 
 	public void DoubleDown(Seat seat) {
-		DealCard(seat);
-		int seatHighestTotalScore = 0;
-		if (GetHighestTotalScoreAndCheckBust(seat, out seatHighestTotalScore)) {
-			Debug.LogFormat("Seat {0} {1} busts", seat.GetSeatType(), seat.name);
-		}
+		// TO-DO: Double bet amount
+		Hit(seat);
+		// TO-DO: First implement a rule where doubling down will mean that it will be the last card that player gets
 	}
 
 	#endregion
