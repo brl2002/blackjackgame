@@ -182,8 +182,13 @@ public class Game : MonoBehaviour {
 		m_DealerSeat.GetHighestTotalScore(out dealerHighestScore);
 		while (dealerHighestScore < 17) {
 			m_DealerSeat.DealCard(m_CardPool.GetCard());
+			m_DealerSeat.GetHighestTotalScore(out dealerHighestScore);
 		}
-		
+		m_DealerSeat.ShowCards();
+		Debug.LogFormat("{0} Score: {1}", m_DealerSeat.GetSeatType(), dealerHighestScore);
+		if (dealerHighestScore > 21) {
+			Debug.LogFormat("Dealer {0} {1} busts with score {2}", m_DealerSeat.GetSeatType(), m_DealerSeat.name, dealerHighestScore);
+		}
 	}
 
 	public void DoubleDown(Seat seat) {
