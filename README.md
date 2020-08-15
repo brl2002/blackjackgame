@@ -92,3 +92,30 @@ Use keyboard to play:
 - Clear table
   - Reset pool of cards
 - Determine outcome
+
+## Player UI & MVC  
+
+### Model:  
+- Player cards in hand
+- Player cash in hand
+- Player total betting amount
+
+## View:  
+- Card game object(s)
+  - Represents player’s cards in hand
+- Cash in hand display
+  - UI displaying how much cash player has in hand
+- Accumulated betting amount
+  - UI displaying player’s current accumulated betting amount
+- UI Buttons
+
+## Controller:  
+- Start
+  - Player receives cash to start
+- Join table
+- Gameplay
+  - Hit
+  - Stand
+  - Double Down
+- Leave table
+
