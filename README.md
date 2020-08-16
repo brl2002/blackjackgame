@@ -119,3 +119,37 @@ Use keyboard to play:
   - Double Down
 - Leave table
 
+## Player UI & MVC Design  
+
+### Model/BlackjackModel  
+- PlayerBlackjackModel
+  - Cards in hand
+  - Cash in hand
+  - Total betting amount
+- DealerBlackjackModel
+
+### View/BlackjackView
+- StartBlackjackView
+  - UI elements
+    - Start button
+    - Player cash
+- JoinBlackjackView
+  - UI elements
+    - Join button
+    - Player cash
+- PlayBlackjackView
+  - UI elements
+    - Hit button
+    - Stand button
+    - Double down button
+    - Player cash
+    - Player betting amount
+- ExitBlackjackView
+  - UI elements
+    - Continue button
+    - Player cash
+    
+### Controller/BlackjackController
+- Derived classes
+  - SinglePlayerBlackjackController
+  - MultiplayerBlackjackController
