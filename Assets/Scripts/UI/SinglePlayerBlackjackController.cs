@@ -61,11 +61,14 @@ public class SinglePlayerBlackjackController : BlackjackController {
 	}
 
 	private void OnJoin() {
-		Game.Instance.StartGame();
+		Seat seat = Game.Instance.JoinSeat();
+		// We want to first register model object
 		foreach (var view in m_BlackjackViews) {
 			// Hacky solution for registering target seat
 			view.RegisterViewModelObject(Game.Instance.GetSeat(1));
 		}
+		seat.HandOutCash(BlackjackRules.Instance.PlayerStartingCashAmount);
+		Game.Instance.StartGame();
 		GoToView("BlackjackView.PlayBlackjackView");
 		Debug.Log("Player Join");
 	}

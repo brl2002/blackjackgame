@@ -69,6 +69,12 @@ public class Game : MonoBehaviour {
 		}
 	}
 
+	public int TakenSeatsCount {
+		get {
+			return m_TakenSeats.Count;
+		}
+	}
+
 	#endregion
 
 	#region Monobeahviour Methods
@@ -178,10 +184,14 @@ public class Game : MonoBehaviour {
 		return m_Seats[index];
 	}
 
+	public Seat JoinSeat() {
+		if (TakenSeatsCount == 0) {
+			m_DealerSeat = AddSeat(Seat.Type.DEALER);
+		}
+		return AddSeat(Seat.Type.PLAYER);
+	}
+
 	public void StartGame() {
-		m_DealerSeat = AddSeat(Seat.Type.DEALER);
-		Seat player = AddSeat(Seat.Type.PLAYER);
-		player.HandOutCash(BlackjackRules.Instance.PlayerStartingCashAmount);
 		m_State = State.DEALING_STARTING_CARDS;
 		DealFirstCards();
 		m_State = State.WAITING_FOR_PLAYER;

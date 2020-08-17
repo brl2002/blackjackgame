@@ -12,7 +12,7 @@ public class TextViewComponent : ViewComponent {
 
 	public override void UpdateComponent(object newValue, object previousValue) {
 		// TO-DO: Updating text here is somewhat hard coded with updating only cash in mind, will need to implement a better logic for this
-		m_Text.text = string.Format("${0}", (string)newValue);
+		m_Text.text = string.Format("${0}", newValue.ToString());
 	}
 
 }
