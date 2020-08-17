@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using System.Collections;
 
 public class ButtonViewComponent : ViewComponent {
-
-	[SerializeField]
-	private string m_ButtonId;
 
 	private Button m_Button;
 
@@ -14,9 +12,9 @@ public class ButtonViewComponent : ViewComponent {
 		m_IsInitializationComplete = true;
 	}
 
-	public override void Register(ViewComponentEvent viewComponentEvent) {
+	public override void Register(ViewComponentEvent onViewComponentEvent) {
 		m_Button.onClick.AddListener(() => {
-			viewComponentEvent(m_ButtonId);
+			onViewComponentEvent(m_ID);
 		});
 	}
 

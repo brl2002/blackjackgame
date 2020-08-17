@@ -80,16 +80,6 @@ public class Game : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (Input.GetKeyDown(KeyCode.A)) {
-			if (m_State == State.WAITING) {
-				m_DealerSeat = AddSeat(Seat.Type.DEALER);
-				Seat player = AddSeat(Seat.Type.PLAYER);
-				player.HandOutCash(BlackjackRules.Instance.PlayerStartingCashAmount);
-				m_State = State.DEALING_STARTING_CARDS;
-				DealFirstCards();
-				m_State = State.WAITING_FOR_PLAYER;
-			}
-		}
 		if (Input.GetKeyDown(KeyCode.H)) {
 			if (m_State == State.WAITING_FOR_PLAYER) {
 				m_State = State.DEALING_PLAYER_CARD;
@@ -182,6 +172,19 @@ public class Game : MonoBehaviour {
 			return seat;
 		}
 		return null;
+	}
+
+	public Seat GetSeat(int index) {
+		return m_Seats[index];
+	}
+
+	public void StartGame() {
+		m_DealerSeat = AddSeat(Seat.Type.DEALER);
+		Seat player = AddSeat(Seat.Type.PLAYER);
+		player.HandOutCash(BlackjackRules.Instance.PlayerStartingCashAmount);
+		m_State = State.DEALING_STARTING_CARDS;
+		DealFirstCards();
+		m_State = State.WAITING_FOR_PLAYER;
 	}
 
 	public void DealFirstCards() {
