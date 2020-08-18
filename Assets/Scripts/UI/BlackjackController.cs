@@ -3,6 +3,8 @@ using System.Collections;
 
 public class BlackjackController : MonoBehaviour {
 
+	public delegate void OnViewTransitionComplete();
+
 	[SerializeField]
 	protected BlackjackView[] m_BlackjackViews;
 
@@ -59,20 +61,26 @@ public class BlackjackController : MonoBehaviour {
 	protected virtual void OnInitializationComplete() {
 	}
 
-	protected virtual void GoToView(string blackjackViewID) {
-		BlackjackView blackjackView = FindBlackjackView(blackjackViewID);
+	protected virtual void GoToView(string blackjackViewID, OnViewTransitionComplete onViewTransitionComplete = null) {
+		BlackjackView targetBlackjackView = FindBlackjackView(blackjackViewID);
 		if (m_CurrenBlackjackView == null) {
-			m_CurrenBlackjackView = blackjackView;
+			m_CurrenBlackjackView = targetBlackjackView;
 			return;
 		}
-		m_CurrenBlackjackView.Hide((obj) => {
+		StartCoroutine(GoToViewCoroutineImpl(m_CurrenBlackjackView, targetBlackjackView, onViewTransitionComplete));
+	}
+
+	protected virtual IEnumerator GoToViewCoroutineImpl(BlackjackView currentView, BlackjackView targetView, OnViewTransitionComplete onViewTransitionComplete) {
+		currentView.Hide((obj) => {
 
 		});
 		// TO-DO: Make transition to new blackjack view
-		m_CurrenBlackjackView = blackjackView;
+		yield return new WaitForSeconds(0.5f);
+		m_CurrenBlackjackView = targetView;
 		m_CurrenBlackjackView.Show((obj) => {
 
 		});
+		onViewTransitionComplete?.Invoke();
 	}
 
 }

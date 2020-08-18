@@ -9,6 +9,11 @@ public class SinglePlayerBlackjackController : BlackjackController {
 
 	protected override void Awake() {
 		base.Awake();
+		Game.OnSeatWin += OnSeatWin;
+		Game.OnSeatLose += OnSeatLose;
+		Game.OnSeatBust += OnSeatBust;
+		Game.OnDealerBust += OnDealerBust;
+		Game.OnRoundComplete += OnRoundComplete;
 	}
 
 	protected override void OnInitializationComplete() {
@@ -61,32 +66,38 @@ public class SinglePlayerBlackjackController : BlackjackController {
 	}
 
 	private void OnJoin() {
-		Seat seat = Game.Instance.JoinSeat();
-		// We want to first register model object
-		foreach (var view in m_BlackjackViews) {
-			// Hacky solution for registering target seat
-			view.RegisterViewModelObject(Game.Instance.GetSeat(1));
-		}
-		seat.HandOutCash(BlackjackRules.Instance.PlayerStartingCashAmount);
-		Game.Instance.StartGame();
-		GoToView("BlackjackView.PlayBlackjackView");
-		Debug.Log("Player Join");
+		GoToView("BlackjackView.PlayBlackjackView", () => {
+			Seat seat = Game.Instance.JoinSeat();
+			// We want to first register model object
+			foreach (var view in m_BlackjackViews) {
+				// Hacky solution for registering target seat
+				view.RegisterViewModelObject(Game.Instance.GetSeat(1));
+			}
+			seat.ResetBettingAmount();
+			seat.HandOutCash(BlackjackRules.Instance.PlayerStartingCashAmount);
+			Game.Instance.StartGame();
+			Debug.Log("Player Joined");
+		});
 	}
 
-	private void Update() {
-		if (Input.GetKeyDown(KeyCode.H)) {
-			m_CurrenBlackjackView.Hide((obj) => {
-				Debug.Log("Blackjack View OnHideComplete");
-			});
-		}
-		if (Input.GetKeyDown(KeyCode.S)) {
-			m_CurrenBlackjackView.Show((obj) => {
-				Debug.Log("Blackjack View OnShowComplete");
-			});
-		}
-		if (Input.GetKeyDown(KeyCode.T)) {
-			GoToView("BlackjackView.PlayBlackjackView");
-		}
+	private void OnSeatWin(Seat seat, int seatHighestTotalPoints, int dealerHighestTotalPoints) {
+
+	}
+
+	private void OnSeatLose(Seat seat, int seatHighestTotalPoints, int dealerHighestTotalPoints) {
+
+	}
+
+	private void OnSeatBust(Seat seat, int seatHighestTotalPoints) {
+
+	}
+
+	private void OnDealerBust(Seat seat) {
+
+	}
+
+	private void OnRoundComplete(Seat seat) {
+
 	}
 
 }

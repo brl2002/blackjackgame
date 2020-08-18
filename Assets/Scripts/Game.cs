@@ -75,6 +75,12 @@ public class Game : MonoBehaviour {
 		}
 	}
 
+	public State CurrentState {
+		get {
+			return m_State;
+		}
+	}
+
 	#endregion
 
 	#region Monobeahviour Methods
@@ -228,7 +234,9 @@ public class Game : MonoBehaviour {
 		m_State = State.ROUND_COMPLETE;
 		if (OnRoundComplete != null) {
 			foreach (var seat in m_TakenSeats) {
-				OnRoundComplete(seat);
+				if (seat != m_DealerSeat) {
+					OnRoundComplete(seat);
+				}
 			}
 		}
 		Debug.Log("Round Complete");
