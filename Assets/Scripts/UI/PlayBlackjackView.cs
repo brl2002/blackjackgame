@@ -23,6 +23,7 @@ public class PlayBlackjackView : BlackjackView {
 	protected override IEnumerator HideCoroutine(BlackjackViewEvent onHideBlackjackViewCompletion) {
 		m_CanvasGroup.alpha = 0;
 		m_CanvasGroup.interactable = false;
+		m_CanvasGroup.blocksRaycasts = false;
 		onHideBlackjackViewCompletion?.Invoke(null);
 		yield return null;
 	}
@@ -30,6 +31,7 @@ public class PlayBlackjackView : BlackjackView {
 	protected override IEnumerator ShowCoroutine(BlackjackViewEvent onShowBlackjackViewCompletion) {
 		m_CanvasGroup.alpha = 1;
 		m_CanvasGroup.interactable = true;
+		m_CanvasGroup.blocksRaycasts = true;
 		onShowBlackjackViewCompletion?.Invoke(null);
 		yield return null;
 	}
@@ -37,11 +39,13 @@ public class PlayBlackjackView : BlackjackView {
 	public override void HideImmediate() {
 		m_CanvasGroup.alpha = 0;
 		m_CanvasGroup.interactable = false;
+		m_CanvasGroup.blocksRaycasts = false;
 	}
 
 	public override void ShowImmediate() {
 		m_CanvasGroup.alpha = 1;
 		m_CanvasGroup.interactable = true;
+		m_CanvasGroup.blocksRaycasts = true;
 	}
 
 }

@@ -16,6 +16,10 @@ public class PlayerBlackjackModel : BlackjackModel {
 		m_Seat.OnCashInHandChanged += OnCashInHandChanged;
 	}
 
+	/// <summary>
+	/// Make sure to call parent DeregisterModelObject call very last
+	/// </summary>
+	/// <param name="obj"></param>
 	public override void DeregisterModelObject(object obj) {
 		m_Seat.OnBetAmountChanged -= OnBetAmountChanged;
 		m_Seat.OnCashInHandChanged -= OnCashInHandChanged;

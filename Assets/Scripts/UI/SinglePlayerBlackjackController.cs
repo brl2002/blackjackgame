@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System;
 
 public class SinglePlayerBlackjackController : BlackjackController {
@@ -80,16 +81,29 @@ public class SinglePlayerBlackjackController : BlackjackController {
 		});
 	}
 
-	private void OnSeatWin(Seat seat, int seatHighestTotalPoints, int dealerHighestTotalPoints) {
+	private IEnumerator OnRoundCompleteCoroutineImpl() {
+		yield return new WaitForSeconds(2.0f);
+		GoToView("BlackjackView.PlayBlackjackView", () => {
+			Game.Instance.CompleteRound();
+		});
+	}
 
+	private void OnSeatWin(Seat seat, int seatHighestTotalPoints, int dealerHighestTotalPoints) {
+		GoToView("BlackjackView.RoundResultBlackjackView", () => {
+			StartCoroutine(OnRoundCompleteCoroutineImpl());
+		});
 	}
 
 	private void OnSeatLose(Seat seat, int seatHighestTotalPoints, int dealerHighestTotalPoints) {
-
+		GoToView("BlackjackView.RoundResultBlackjackView", () => {
+			StartCoroutine(OnRoundCompleteCoroutineImpl());
+		});
 	}
 
 	private void OnSeatBust(Seat seat, int seatHighestTotalPoints) {
-
+		GoToView("BlackjackView.RoundResultBlackjackView", () => {
+			StartCoroutine(OnRoundCompleteCoroutineImpl());
+		});
 	}
 
 	private void OnDealerBust(Seat seat) {

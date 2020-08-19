@@ -255,7 +255,6 @@ public class Game : MonoBehaviour {
 			}
 			// Decrement player cash by current bet amount
 			seat.RemoveCash(seat.BettingAmount);
-			CompleteRound();
 		}
 	}
 
@@ -279,6 +278,9 @@ public class Game : MonoBehaviour {
 			}
 			// Increment player cash by current bet amount
 			seat.HandOutCash(seat.BettingAmount);
+			if (OnSeatWin != null) {
+				OnSeatWin(seat, seatHighestScore, dealerHighestScore);
+			}
 			Debug.LogFormat("Seat {0} {1} wins with score {2}", seat.GetSeatType(), seat.name, seatHighestScore);
 		} else {
 			if (seatHighestScore > dealerHighestScore) {
@@ -297,7 +299,6 @@ public class Game : MonoBehaviour {
 				Debug.LogFormat("Seat {0} {1} loses with score {2}", seat.GetSeatType(), seat.name, seatHighestScore);
 			}
 		}
-		CompleteRound();
 	}
 
 	public void DoubleDown(Seat seat) {

@@ -21,6 +21,10 @@ public class Seat : MonoBehaviour {
 	/// </summary>
 	public Action<int, int> OnCashInHandChanged;
 
+	public Action<int> OnWin;
+
+	public Action<int> OnLose;
+
 	#endregion
 
 	#region Fields

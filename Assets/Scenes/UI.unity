@@ -560,5 +560,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: SinglePlayerBlackjackController
       objectReference: {fileID: 0}
+    - target: {fileID: 380270389682003063, guid: 8a28537fadea8c64287d59f8181b2de2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 380270390156310848, guid: 8a28537fadea8c64287d59f8181b2de2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a28537fadea8c64287d59f8181b2de2, type: 3}
