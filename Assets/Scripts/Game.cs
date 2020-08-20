@@ -245,7 +245,12 @@ public class Game : MonoBehaviour {
 		m_State = State.WAITING_FOR_PLAYER;
 	}
 
-	public void Hit(Seat seat) {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="seat"></param>
+	/// <returns>did player hit and not bust?</returns>
+	public bool Hit(Seat seat) {
 		DealCard(seat);
 		int seatHighestTotalScore = 0;
 		if (GetHighestTotalScoreAndCheckBust(seat, out seatHighestTotalScore)) {
@@ -255,7 +260,9 @@ public class Game : MonoBehaviour {
 			}
 			// Decrement player cash by current bet amount
 			seat.RemoveCash(seat.BettingAmount);
+			return false;
 		}
+		return true;
 	}
 
 	public void Stand(Seat seat) {
@@ -305,8 +312,9 @@ public class Game : MonoBehaviour {
 		// Double bet amount
 		seat.DoubleBettingAmount();
 		// First implement a rule where doubling down will mean that it will be the last card that player gets
-		Hit(seat);
-		Stand(seat);
+		if (Hit(seat)) {
+			Stand(seat);
+		}
 	}
 
 	#endregion
