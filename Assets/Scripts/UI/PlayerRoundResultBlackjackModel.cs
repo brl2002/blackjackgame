@@ -3,7 +3,7 @@
 public class PlayerRoundResultBlackjackModel : PlayerBlackjackModel {
 
 	[SerializeField]
-	private string m_RoundResultModelID;
+	private string m_RoundResultTextModelID;
 
 	public override void RegisterModelObject(object obj) {
 		base.RegisterModelObject(obj);
@@ -21,23 +21,19 @@ public class PlayerRoundResultBlackjackModel : PlayerBlackjackModel {
 	}
 
 	private void OnSeatWin(Seat seat, int seatHighestTotalPoints, int dealerHighestTotalPoints) {
-		string resultText = string.Format("Player wins with {0} point(s)", seatHighestTotalPoints);
-		m_OnBlackjackModelChanged?.Invoke(m_RoundResultModelID, resultText, "");
+		m_OnBlackjackModelChanged?.Invoke(m_RoundResultTextModelID, string.Format("Player wins with {0} points", seatHighestTotalPoints), string.Empty);
 	}
 
 	private void OnSeatLose(Seat seat, int seatHighestTotalPoints, int dealerHighestTotalPoints) {
-		string resultText = string.Format("Player loses with {0} point(s)", seatHighestTotalPoints);
-		m_OnBlackjackModelChanged?.Invoke(m_RoundResultModelID, resultText, "");
+		m_OnBlackjackModelChanged?.Invoke(m_RoundResultTextModelID, string.Format("Player loses with {0} points", seatHighestTotalPoints), string.Empty);
 	}
 
 	private void OnSeatBust(Seat seat, int seatHighestTotalPoints) {
-		string resultText = string.Format("Player busts with {0} point(s)", seatHighestTotalPoints);
-		m_OnBlackjackModelChanged?.Invoke(m_RoundResultModelID, resultText, "");
+		m_OnBlackjackModelChanged?.Invoke(m_RoundResultTextModelID, string.Format("Player busts with {0} points", seatHighestTotalPoints), string.Empty);
 	}
 
 	private void OnDealerBust(Seat seat) {
-		string resultText = string.Format("Dealer busted, player wins");
-		m_OnBlackjackModelChanged?.Invoke(m_RoundResultModelID, resultText, "");
+		m_OnBlackjackModelChanged?.Invoke(m_RoundResultTextModelID, "Dealer busts", string.Empty);
 	}
 
 }

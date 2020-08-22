@@ -276,6 +276,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SinglePlayerBlackjackController
       objectReference: {fileID: 0}
+    - target: {fileID: 6894887243128884397, guid: 8a28537fadea8c64287d59f8181b2de2,
+        type: 3}
+      propertyPath: m_ID
+      value: PlayBlackjackView.OnSeatBust.Text
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a28537fadea8c64287d59f8181b2de2, type: 3}
 --- !u!224 &394442319 stripped

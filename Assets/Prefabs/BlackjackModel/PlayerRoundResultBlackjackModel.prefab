@@ -50,4 +50,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BetAmountModelID: PlayBlackjackView.BetAmount.Text
   m_CashInHandModelID: PlayBlackjackView.Cash.Text
-  m_RoundResultModelID: PlayBlackjackView.RoundResult.Text
+  m_RoundResultTextModelID: PlayBlackjackView.OnSeatBust.Text

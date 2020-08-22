@@ -81,6 +81,9 @@ public class ViewComponent : MonoBehaviour {
 	public virtual void Register(ViewComponentEvent onViewComponentEvent) {
 	}
 
+	public virtual void Deregister(ViewComponentEvent onViewComponentEvent) {
+	}
+
 	public virtual void Hide() {
 		StartCoroutine(HideCoroutine());
 	}

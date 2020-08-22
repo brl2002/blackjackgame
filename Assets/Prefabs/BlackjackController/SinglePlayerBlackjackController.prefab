@@ -1686,7 +1686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba30e96a0483d204fb1769fa8312ae9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ID: PlayBlackjackView.RoundResult.Text
+  m_ID: PlayBlackjackView.OnSeatWin.Text
 --- !u!1 &791386632578118998
 GameObject:
   m_ObjectHideFlags: 0
